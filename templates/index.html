@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <h1>Welcome to Bellorum</h1>
+    <p>
+        This site collects the most beautiful pictures from Reddit.
+    </p>
+    <p>
+        Please select a gallery in the menu.
+    </p>
+
+	<div class="container">
+		<div class="content">
+			<div class="grid">
+                {% for gallery in gallery_list %}
+                    <div class="grid__item" data-size="700x800">
+                        <a href="{% static gallery.images.0.image_url %}" class="img-wrap"><img src="{% static gallery.images.0.thumb_url %}" alt="img06" />
+                            <div class="description description--preview">
+                                <a class="item--title" href="{% url 'grid' gallery.url %}">
+                                    <h3>
+                                        {{ gallery.name }}
+                                    </h3>
+                                </a>
+                                    <p>There was a tiny man sitting on the stove. He looked at me but he didn't see me. It seemed to me he was in a distant dimension.</p>
+
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+                <!--<div class="grid__item" data-size="700x800">-->
+                    <!--<a href="{% static 'gallery/img/collage/7.jpg' %}" class="img-wrap"><img src="{% static 'gallery/img/collage/thumbs/7.jpg' %}" alt="img07" />-->
+                        <!--<div class="description description&#45;&#45;preview">-->
+                            <!--<h3>{{ name }}</h3>-->
+                            <!--<p>There was a tiny man sitting on the stove. He looked at me but he didn't see me. It seemed to me he was in a distant dimension.</p>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</div>-->
+                <!--<div class="grid__item" data-size="700x800">-->
+                    <!--<a href="{% static 'gallery/img/collage/8.jpg' %}" class="img-wrap"><img src="{% static 'gallery/img/collage/thumbs/8.jpg' %}" alt="img08" />-->
+                        <!--<div class="description description&#45;&#45;preview">-->
+                            <!--<h3>{{ name }}</h3>-->
+                            <!--<p>There was a tiny man sitting on the stove. He looked at me but he didn't see me. It seemed to me he was in a distant dimension.</p>-->
+                        <!--</div>-->
+                    <!--</a>-->
+                <!--</div>-->
+			</div>
+			<div class="preview">
+				<button class="action action--close"><i class="fa fa-times"></i><span class="text-hidden">Close</span></button>
+				<div class="description description--preview">
+				</div>
+				<div class="collage">
+					<img src="{% static 'gallery/img/collage/dummies/1.jpg' %}" alt="img01" />
+					<img src="{% static 'gallery/img/collage/dummies/2.jpg' %}" alt="img02" />
+					<img src="{% static 'gallery/img/collage/dummies/3.jpg' %}" alt="img03" />
+					<img src="{% static 'gallery/img/collage/dummies/4.jpg' %}" alt="img04" />
+				</div>
+                <a type=submit class="button button--view">View the album</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
