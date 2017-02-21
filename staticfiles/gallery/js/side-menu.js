@@ -9,13 +9,11 @@ var paperMenu = {
 		this.$window.addClass('tilt');
 		this.$hamburger.off('click');
 		$('#container, .hamburger').on('click', this.close.bind(this));
-		console.log('opening...');
 	},
 	close: function() {
 		this.$window.removeClass('tilt');
 		$('#container, .hamburger').off('click');
 		this.$hamburger.on('click', this.open.bind(this));
-		console.log('closing...');
 	},
 	updateTransformOrigin: function() {
 		scrollTop = this.$window.scrollTop();

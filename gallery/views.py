@@ -20,6 +20,7 @@ class Gallery:
     def add_image(self, image):
         self.images.append(image)
 
+
 class ContextBuilder:
     context = None
 
@@ -59,11 +60,12 @@ class GridContextBuilder(ContextBuilder):
     def __init__(self, gallery_name):
         super().__init__()
         self.gallery_name = gallery_name
+        self.update()
 
-    def update(self, gallery_name=None):
+    def update(self):
         super().update()
-        if gallery_name:
-            self.context['gallery_name'] = gallery_name
+        if self.gallery_name:
+            self.context['gallery_name'] = self.gallery_name
 
 
 def index(request):
