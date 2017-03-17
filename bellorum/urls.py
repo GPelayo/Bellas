@@ -14,10 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
 from gallery import urls as gallery_urls
+from bellorum import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^gallery/', include(gallery_urls)),
-]
+    url(r'^$', gallery_urls.views.gallery_index_redirect),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

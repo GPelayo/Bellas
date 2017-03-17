@@ -14,8 +14,8 @@
                 <div class="grid">
                     {% for picture in image_list %}
                         <div class="grid__item" data-size="{{ picture.dimensions }}">
-                            <a href="{% static picture.image_url %}" class="img-wrap">
-                                <img src="{% static picture.thumb_url %}" alt="img06" />
+                            <a href="{% get_media_prefix %}{{ picture.image_url }}" class="img-wrap">
+                                <img src="{% get_media_prefix %}{{ picture.thumb_url }}" alt="img06" />
                                 <div class="description description description--grid">
                                     {{ picture.name }}
                                 </div>

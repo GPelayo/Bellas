@@ -1,3 +1,22 @@
 from django.db import models
 
-# Create your models here.
+
+class BellObject(models.Model):
+    pass
+
+
+class BellGallery(BellObject):
+    name = models.CharField(max_length=35)
+    url = models.CharField(max_length=10)
+
+
+class BellImage(BellObject):
+    name = models.CharField(max_length=35)
+    width = models.IntegerField()
+    height = models.IntegerField()
+    image_location = models.CharField(max_length=300)
+    thumbnail_location = models.CharField(max_length=300)
+    parent_gallery = models.ForeignKey(BellGallery)
+
+    def __str__(self):
+        return self.name

@@ -18,7 +18,7 @@
 			<div class="grid">
                 {% for gallery in gallery_list %}
                     <div class="grid__item" data-size="700x800">
-                        <a href="{% static gallery.images.0.image_url %}" class="img-wrap"><img src="{% static gallery.images.0.thumb_url %}" alt="img06" />
+                        <a href="{% get_media_prefix %}{{ gallery.images.0.image_url }}" class="img-wrap"><img src="{% get_media_prefix %}{{ gallery.images.0.thumb_url }}" alt="img06" />
                             <div class="description description--grid">
                                 <a class="item--title" href="{% url 'grid' gallery.url %}">
                                     <h3>
@@ -37,10 +37,10 @@
 				<div class="description description--preview">
 				</div>
 				<div class="collage">
-					<img src="{% static 'gallery/img/collage/dummies/1.jpg' %}" alt="img01" />
-					<img src="{% static 'gallery/img/collage/dummies/2.jpg' %}" alt="img02" />
-					<img src="{% static 'gallery/img/collage/dummies/3.jpg' %}" alt="img03" />
-					<img src="{% static 'gallery/img/collage/dummies/4.jpg' %}" alt="img04" />
+					<img src="{% get_media_prefix %}gallery/img/collage/1.jpg" alt="img01" />
+					<img src="{% get_media_prefix %}gallery/img/collage/2.jpg" alt="img02" />
+					<img src="{% get_media_prefix %}gallery/img/collage/3.jpg" alt="img03" />
+					<img src="{% get_media_prefix %}gallery/img/collage/4.jpg" alt="img04" />
 				</div>
                 <a type=submit class="button button--view">View the album</a>
 			</div>
