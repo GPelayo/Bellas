@@ -17,6 +17,7 @@ class BellImage(BellObject):
     image_location = models.CharField(max_length=300)
     thumbnail_location = models.CharField(max_length=300)
     parent_gallery = models.ForeignKey(BellGallery)
+    source_id = models.CharField(max_length=35, unique=True)
 
     def __str__(self):
         return self.name

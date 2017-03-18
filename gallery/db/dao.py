@@ -76,5 +76,5 @@ class GridDAO(BaseDAO):
 
     def get_images(self):
         return [ImageDBModelFactory(img).create()
-                for img in BellImage.objects.filter(parent_gallery__name=self.gallery_name)[: self.image_qty]]
+                for img in BellImage.objects.filter(parent_gallery__name=self.gallery_name.title())[: self.image_qty]]
 
