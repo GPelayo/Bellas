@@ -1,13 +1,22 @@
 from ..models import BellImage, BellGallery
 from praw.models import Submission
+import imghdr
+import struct
+import os
+
+
+DEFAULT_IMG_WIDTH = 800
+DEFAULT_IMG_HEIGHT = 1200
 
 
 class BaseArchiver:
-    def __init__(self, gallery_name):
-        self._gallery_name = gallery_name
-        self.picture_data = None
-        self.image_url = None
-        self.thumb_url = None
+    def __init__(self, gallery_name, media_folder):
+        self._gallery_name = gallery_name.lower()
+        self.image_data = None
+        self.image_filepath = None
+        self.thumb_filepath = None
+        self.media_folder = media_folder
+        self.height = self.width = None
 
     @property
     def gallery_name(self):
@@ -18,9 +27,10 @@ class BaseArchiver:
         self._gallery_name = name
 
     def load_image_db_data(self, picture_data: Submission, image_dir, thumb_dir=None):
-        self.thumb_url = thumb_dir or image_dir
-        self.image_url = image_dir
-        self.picture_data = picture_data
+        self.thumb_filepath = thumb_dir or image_dir
+        self.image_filepath = image_dir
+        self.image_data = picture_data
+        self.width, self.height = self.__calc_image_size() or (DEFAULT_IMG_WIDTH, DEFAULT_IMG_HEIGHT)
 
     def save(self):
         raise NotImplemented
@@ -28,13 +38,42 @@ class BaseArchiver:
     def is_dupe_image(self, source_id):
         pass
 
+    def __calc_image_size(self):
+        full_path = os.path.join(self.media_folder, self.image_filepath)
+        with open(full_path, 'rb') as fhandle:
+            head = fhandle.read(24)
+            if len(head) != 24:
+                return
+            if imghdr.what(full_path) == 'png':
+                check = struct.unpack('>i', head[4:8])[0]
+                if check != 0x0d0a1a0a:
+                    return
+                width, height = struct.unpack('>ii', head[16:24])
+            elif imghdr.what(full_path) == 'gif':
+                width, height = struct.unpack('<HH', head[6:10])
+            else:
+                try:
+                    fhandle.seek(0)  # Read 0xff next
+                    size = 2
+                    ftype = 0
+                    while not 0xc0 <= ftype <= 0xcf:
+                        fhandle.seek(size, 1)
+                        byte = fhandle.read(1)
+                        while ord(byte) == 0xff:
+                            byte = fhandle.read(1)
+                        ftype = ord(byte)
+                        size = struct.unpack('>H', fhandle.read(2))[0] - 2
+                    # We are at a SOFn block
+                    fhandle.seek(1, 1)  # Skip `precision' byte.
+                    height, width = struct.unpack('>HH', fhandle.read(4))
+                except Exception:  # IGNORE:W0703
+                    print("Corrupted JPEG")
+                    return
+        return width, height
+
 
 class DjangoArchiver(BaseArchiver):
     pass
-
-
-DEFAULT_IMG_WIDTH = 800
-DEFAULT_IMG_HEIGHT = 1200
 
 
 class DuplicateImageError(Exception):
@@ -42,11 +81,11 @@ class DuplicateImageError(Exception):
 
 
 class RedditImageArchiver(DjangoArchiver):
-    def __init__(self, gallery_name):
-        super().__init__(gallery_name)
+    def __init__(self, subreddit, media_root):
+        super().__init__(subreddit, media_root)
 
     def is_dupe_image(self, source_id=None):
-        sid = source_id or self.picture_data.id
+        sid = source_id or self.image_data.id
         return BellImage.objects.filter(source_id=sid).exists()
 
     def load_image_db_data(self, picture_data: Submission, image_dir, thumb_dir=None):
@@ -59,20 +98,19 @@ class RedditImageArchiver(DjangoArchiver):
             glry = BellGallery.objects.filter(name=self.gallery_name)[0]
         else:
             glry = BellGallery()
-            glry.url = self.gallery_name.lower()
-            glry.name = self.gallery_name.title()
+            glry.name = self.gallery_name.lower()
             glry.save()
 
-        if self.is_dupe_image(self.picture_data.id):
-            img_obj = BellImage.objects.filter(self.picture_data.id)[0]
+        if self.is_dupe_image(self.image_data.id):
+            img_obj = BellImage.objects.filter(self.image_data.id)[0]
             # TODO add log above overriding image data
         else:
             img_obj = BellImage()
-        img_obj.name = self.picture_data.title
-        img_obj.source_id = self.picture_data.id
-        img_obj.width = 800
-        img_obj.height = 2000
-        img_obj.image_location = self.image_url
-        img_obj.thumbnail_location = self.thumb_url
+        img_obj.name = self.image_data.title
+        img_obj.source_id = self.image_data.id
+        img_obj.width = self.width
+        img_obj.height = self.height
+        img_obj.image_location = self.image_filepath
+        img_obj.thumbnail_location = self.thumb_filepath
         img_obj.parent_gallery = glry
         img_obj.save()

@@ -15,7 +15,7 @@ if not os.path.exists(REDDIT_FULLPATH):
 
 @app.task
 def gather_pictures(subreddit, name=None):
-    arch = RedditImageArchiver(name or subreddit)
+    arch = RedditImageArchiver(name or subreddit, MEDIA_ROOT)
     crtr = RedditCurator(RedditSecrets(), subreddit, arch)
     crtr.gather_data(10)
 

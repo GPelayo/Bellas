@@ -46,8 +46,9 @@ class RedditCurator(BaseCurator):
                 brl_log.log(logging.INFO, "Skipped {}".format(sb))
 
     def save_to_db(self, media_folder, subdirectory=""):
-        if not os.path.exists(media_folder):
-            os.mkdir(media_folder)
+        full_dir = os.path.join(media_folder, subdirectory)
+        if not os.path.exists(full_dir):
+            os.makedirs(full_dir)
         for sb in self.submissions:
             filename = sb.url.split('/')[-1]
             relative_media_path = os.path.join(subdirectory, filename)
