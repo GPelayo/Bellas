@@ -31,8 +31,8 @@ class GalleryDBModelFactory(BaseDBModelFactory):
     def create(self):
         g_obj = GalleryDBModel()
         g_obj.name = self.query_obj.name
-        g_obj.url = self.query_obj.url
-        g_obj.images = GridDAO(gallery_name=g_obj.name, image_qty_per_sync=4).get_images()
+        g_obj.url = str(self.query_obj.id)
+        g_obj.images = GridDAO(self.query_obj.id, image_qty_per_sync=4).get_images()
         return g_obj
 
 
@@ -70,11 +70,11 @@ class ImageDBModelFactory(BaseDBModelFactory):
 
 
 class GridDAO(BaseDAO):
-    def __init__(self, gallery_name, image_qty_per_sync=10):
-        self.gallery_name = gallery_name
+    def __init__(self, gallery_id, image_qty_per_sync=10):
+        self.gallery_id = gallery_id
+        self.gallery_name = BellGallery.objects.get(pk=gallery_id).name
         self.image_qty = image_qty_per_sync
 
     def get_images(self):
         return [ImageDBModelFactory(img).create()
-                for img in BellImage.objects.filter(parent_gallery__name=self.gallery_name.title())[: self.image_qty]]
-
+                for img in BellImage.objects.filter(parent_gallery__pk=self.gallery_id)[: self.image_qty]]
