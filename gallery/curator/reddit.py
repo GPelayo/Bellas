@@ -31,11 +31,11 @@ class RedditCurator(BaseCurator):
         self.archiver = archiver
 
     def gather_data(self, limit=5):
-        hot_posts = self.client.subreddit(self.subreddit).hot()
+        top_posts = self.client.subreddit(self.subreddit).top()
         has_more_posts = True
         while len(self.submissions) < limit and has_more_posts:
             try:
-                sb = next(hot_posts)
+                sb = next(top_posts)
             except StopIteration:
                 has_more_posts = False
 

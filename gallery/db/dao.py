@@ -32,7 +32,7 @@ class GalleryDBModelFactory(BaseDBModelFactory):
         g_obj = GalleryDBModel()
         g_obj.name = self.query_obj.name
         g_obj.url = str(self.query_obj.id)
-        g_obj.images = GridDAO(self.query_obj.id, image_qty_per_sync=4).get_images()
+        g_obj.images = GridDAO(self.query_obj.id, image_qty_per_sync=1).get_images()
         return g_obj
 
 
