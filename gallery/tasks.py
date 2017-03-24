@@ -4,7 +4,6 @@ from .db.archiver import RedditImageArchiver
 from .secrets import RedditSecrets
 from bellorum.settings import MEDIA_ROOT
 import os
-import praw
 
 
 REDDIT_ROOT = os.path.join("gallery", "img", "reddit")

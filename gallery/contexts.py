@@ -33,12 +33,15 @@ class Image:
     tags = None
 
 
+MAX_IMAGE_PER_GALLERY = 100
+
+
 class GridContextBuilder(WithMenuContextBuilder):
     gallery_name = None
 
     def __init__(self, gallery_id):
         super().__init__()
-        self.reader = GridDAO(gallery_id)
+        self.reader = GridDAO(gallery_id, image_qty_per_sync=MAX_IMAGE_PER_GALLERY)
 
     def sync_wth_db(self):
         super().sync_wth_db()
