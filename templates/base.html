@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
     {% block styles %}
-        <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/side-menu.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/normalize.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/base.css' %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/normalize.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'gallery/fonts/font-awesome-4.3.0/css/font-awesome.min.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/demo.css' %}" />
     {% endblock %}
@@ -15,42 +16,17 @@
 	    <script src="{% static 'gallery/js/modernizr-custom.js' %}"></script>
     {% endblock %}
 </head>
-<body class="demo-3">
-<div id="paper-back">
-    <nav id="gallery-menu">
-        <div class="close">
-        </div>
-        <h2 class="header_link">
-            <a href="{% url 'index' %}">
-                Home
-            </a>
-        </h2>
-
-        <h2>Galleries</h2>
-        {% for gallery in gallery_list %}
-            <a href="{% url 'grid' gallery.url %}">
-                {{ gallery.name }}
-            </a>
-        {% endfor %}
-    </nav>
-</div>
-<div id="paper-window">
-    <div id="paper-front">
-        <div class="hamburger"><span></span></div>
+    <body class="demo-3">
         <div id="container">
-            <section>
-                {% block content %}
-                {% endblock %}
-            </section>
+            {% block content %}
+            {% endblock %}
         </div>
-    </div>
-</div>
-{% block tailscripts %}
-	<script src="{% static 'gallery/js/imagesloaded.pkgd.min.js' %}"></script>
-	<script src="{% static 'gallery/js/masonry.pkgd.min.js' %}"></script>
-	<script src="{% static 'gallery/js/classie.js' %}"></script>
-	<script src="{% static 'gallery/js/main.js' %}"></script>
-    <script src="{% static 'gallery/js/side-menu.js' %}"></script>
-{% endblock %}
-</body>
+        {% block tailscripts %}
+            <script src="{% static 'gallery/js/imagesloaded.pkgd.min.js' %}"></script>
+            <script src="{% static 'gallery/js/masonry.pkgd.min.js' %}"></script>
+            <script src="{% static 'gallery/js/classie.js' %}"></script>
+            <script src="{% static 'gallery/js/main.js' %}"></script>
+            <script src="{% static 'gallery/js/side-menu.js' %}"></script>
+        {% endblock %}
+    </body>
 </html>

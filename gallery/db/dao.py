@@ -40,7 +40,7 @@ class BaseDAO:
     pass
 
 
-class MenuDAO(BaseDAO):
+class IndexDAO(BaseDAO):
     @staticmethod
     def get_all_galleries():
         return [GalleryDBModelFactory(glry).create() for glry in BellGallery.objects.all()]

@@ -1,4 +1,4 @@
-from .db.dao import MenuDAO, GridDAO
+from .db.dao import IndexDAO, GridDAO
 
 
 class ContextBuilder:
@@ -12,16 +12,9 @@ class ContextBuilder:
         raise NotImplemented
 
 
-# TODO change to withMenu decorator
-class WithMenuContextBuilder(ContextBuilder):
+class IndexContextBuilder(ContextBuilder):
     def sync_wth_db(self):
-        rdr = MenuDAO()
-        self.context['gallery_list'] = rdr.get_all_galleries()
-
-
-class IndexContextBuilder(WithMenuContextBuilder):
-    def sync_wth_db(self):
-        super().sync_wth_db()
+        self.context['gallery_list'] = IndexDAO().get_all_galleries()
 
 
 class Image:
@@ -36,7 +29,7 @@ class Image:
 MAX_IMAGE_PER_GALLERY = 100
 
 
-class GridContextBuilder(WithMenuContextBuilder):
+class GridContextBuilder(ContextBuilder):
     gallery_name = None
 
     def __init__(self, gallery_id):
@@ -44,6 +37,5 @@ class GridContextBuilder(WithMenuContextBuilder):
         self.reader = GridDAO(gallery_id, image_qty_per_sync=MAX_IMAGE_PER_GALLERY)
 
     def sync_wth_db(self):
-        super().sync_wth_db()
         self.context['gallery_name'] = self.reader.gallery_name
         self.context['image_list'] = self.reader.get_images()

@@ -14,6 +14,34 @@
 	font-style: normal;
 }
 
+@font-face {
+	 font-family: 'architects-daughter';
+	 src: url('../fonts/ArchitectsDaughter.ttf');
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: black;
+	font-family: "Avenir Next", Avenir, 'Helvetica Neue', 'Lato', 'Segoe UI', Helvetica, Arial, sans-serif;
+	color: #fff;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+    text-align: center;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+#container {
+    margin-top: 93px;
+}
+
+#container h1 {
+    font-size: 45px;
+}
+
 *,
 *:after,
 *:before {
@@ -29,17 +57,6 @@
 
 .clearfix:after {
 	clear: both;
-}
-
-body {
-	font-family: "Avenir Next", Avenir, 'Helvetica Neue', 'Lato', 'Segoe UI', Helvetica, Arial, sans-serif;
-	color: #fff;
-	background: #252323;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	width: 100vw;
 }
 
 a {
