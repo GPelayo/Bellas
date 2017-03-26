@@ -6,6 +6,13 @@
 {% endblock %}
 {% block content %}
     <body class="demo-1">
+        <div class="button_container">
+            <div class="button_inner">
+                <a href="{% url 'index' %}">
+                    <div id="home_button"></div>
+                </a>
+            </div>
+        </div>
         <h1>
             {{ gallery_name.title }}
         </h1>

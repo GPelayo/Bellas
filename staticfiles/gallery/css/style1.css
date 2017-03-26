@@ -1,3 +1,20 @@
+div.button_container {
+    width: 100%;
+
+}
+
+div.button_inner {
+    margin: 40px auto;
+    display: inline-block;
+}
+
+div#home_button {
+    height: 25px;
+    width: 25px;
+    background: url(../img/home.png);
+    background-size: 25px 25px;
+}
+
 .grid {
 	position: relative;
 	margin: 0 auto;
