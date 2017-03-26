@@ -1,4 +1,5 @@
 from ..models import BellImage, BellGallery
+from gallery.logger import BellLogger
 from praw.models import Submission
 import imghdr
 import struct
@@ -7,6 +8,8 @@ import os
 
 DEFAULT_IMG_WIDTH = 800
 DEFAULT_IMG_HEIGHT = 1200
+
+imgerr_log = BellLogger("image_sizer", default_level="INFO")
 
 
 class BaseArchiver:
@@ -43,10 +46,12 @@ class BaseArchiver:
         with open(full_path, 'rb') as fhandle:
             head = fhandle.read(24)
             if len(head) != 24:
+                imgerr_log.log("Error Short head < 24: {}".format(self.image_filepath))
                 return
             if imghdr.what(full_path) == 'png':
                 check = struct.unpack('>i', head[4:8])[0]
                 if check != 0x0d0a1a0a:
+                    imgerr_log.log("Error PNG 0x0d0a1a0a: {}".format(self.image_filepath))
                     return
                 width, height = struct.unpack('>ii', head[16:24])
             elif imghdr.what(full_path) == 'gif':
@@ -66,9 +71,13 @@ class BaseArchiver:
                     # We are at a SOFn block
                     fhandle.seek(1, 1)  # Skip `precision' byte.
                     height, width = struct.unpack('>HH', fhandle.read(4))
-                except Exception:  # IGNORE:W0703
-                    print("Corrupted JPEG")
+                except Exception as e:
+                    imgerr_log.log("Error W0703: {}, {}".format(self.image_filepath, str(e)))
                     return
+            imgerr_log.log("{}: {}x{}".format(self.image_filepath, self.width, self.height))
+
+            width = width if width > 20 else DEFAULT_IMG_WIDTH
+            height = height if height > 20 else DEFAULT_IMG_HEIGHT
         return width, height
 
 
