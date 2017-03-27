@@ -18,6 +18,7 @@ class RedditCurator(BaseCurator):
         self.subreddit = subreddit
         self.submissions = []
         self.archiver = archiver
+        self.archiver.description = self.client.subreddit(self.subreddit).public_description
 
     def gather_data(self, limit=5):
         top_posts = self.client.subreddit(self.subreddit).top()

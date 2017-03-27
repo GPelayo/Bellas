@@ -3,7 +3,11 @@
 <html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>
+        {% block title %}
+            Title
+        {% endblock %}
+    </title>
     {% block styles %}
         <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/normalize.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'gallery/fonts/font-awesome-4.3.0/css/font-awesome.min.css' %}" />

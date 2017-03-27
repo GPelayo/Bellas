@@ -37,5 +37,7 @@ class GridContextBuilder(ContextBuilder):
         self.reader = GridDAO(gallery_id, image_qty_per_sync=MAX_IMAGE_PER_GALLERY)
 
     def sync_wth_db(self):
+        gallery = self.reader.get_gallery()
+        self.context['gallery_description'] = gallery.description
         self.context['gallery_name'] = self.reader.gallery_name
         self.context['image_list'] = self.reader.get_images()

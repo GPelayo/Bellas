@@ -15,6 +15,7 @@ imgerr_log = BellLogger("image_sizer", default_level="INFO")
 class BaseArchiver:
     def __init__(self, gallery_name, media_folder):
         self._gallery_name = gallery_name.lower()
+        self.description = None
         self.image_data = None
         self.image_filepath = None
         self.thumb_filepath = None
@@ -108,6 +109,7 @@ class RedditImageArchiver(DjangoArchiver):
         else:
             glry = BellGallery()
             glry.name = self.gallery_name.lower()
+            glry.description = self.description
             glry.save()
 
         if self.is_dupe_image(self.image_data.id):
