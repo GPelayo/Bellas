@@ -1,7 +1,7 @@
 from ..models import BellGallery, BellImage
 
 
-class BaseDBModelFactory:
+class BaseDBModelBuilder:
     query_obj = None
 
 
@@ -25,7 +25,7 @@ class GalleryDBModel:
         return str((self.url, self.name, self.images))
 
 
-class GalleryDBModelFactory(BaseDBModelFactory):
+class GalleryDBModelBuilder(BaseDBModelBuilder):
     def __init__(self, query_object: BellGallery):
         self.query_obj = query_object
 
@@ -45,7 +45,7 @@ class BaseDAO:
 class IndexDAO(BaseDAO):
     @staticmethod
     def get_all_galleries():
-        return [GalleryDBModelFactory(glry).create() for glry in BellGallery.objects.all()]
+        return [GalleryDBModelBuilder(glry).create() for glry in BellGallery.objects.all()]
 
 
 class ImageDBModel:
@@ -57,7 +57,7 @@ class ImageDBModel:
     tags = None
 
 
-class ImageDBModelFactory(BaseDBModelFactory):
+class ImageDBModelBuilder(BaseDBModelBuilder):
     def __init__(self, query_object: BellImage):
         self.query_obj = query_object
 
@@ -77,7 +77,7 @@ class GridDAO(BaseDAO):
         self.image_qty = image_qty_per_sync
 
     def get_images(self):
-        return [ImageDBModelFactory(img).create()
+        return [ImageDBModelBuilder(img).create()
                 for img in BellImage.objects.filter(parent_gallery__pk=self.gallery_id)[: self.image_qty]]
 
     @property
@@ -86,4 +86,4 @@ class GridDAO(BaseDAO):
 
     def get_gallery(self):
         glry = BellGallery.objects.get(pk=self.gallery_id)
-        return GalleryDBModelFactory(glry).create()
+        return GalleryDBModelBuilder(glry).create()

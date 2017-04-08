@@ -2,7 +2,7 @@ from urllib import request
 import praw
 from prawcore import exceptions
 import os
-from .common import APISecrets, BaseCurator
+from .common import APISecrets, BaseGatherer
 from gallery.logger import BellLogger
 
 ALLOWED_IMAGE_EXTENTIONS = ["jpg", "png", "gif", "bmp", "jpeg"]
@@ -18,7 +18,7 @@ class SubredditDoesntExistException(Exception):
         return self.message
 
 
-class RedditCurator(BaseCurator):
+class RedditGatherer(BaseGatherer):
     def __init__(self, secrets: APISecrets, subreddit, archiver):
         super().__init__(archiver)
         self.client = praw.Reddit(client_id=secrets.client_id,

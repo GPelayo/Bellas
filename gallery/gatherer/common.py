@@ -1,4 +1,4 @@
-class BaseCurator:
+class BaseGatherer:
     def __init__(self, archiver):
         self.archiver = archiver
 

@@ -1,5 +1,5 @@
 from bellorum.celery import app
-from .curator.reddit import RedditCurator, SubredditDoesntExistException
+from .gatherer.reddit import RedditGatherer, SubredditDoesntExistException
 from .db.archiver import RedditImageArchiver
 from .secrets import RedditSecrets
 from bellorum.settings import MEDIA_ROOT
@@ -17,11 +17,11 @@ def gather_pictures(subreddit, name=None, limit=10):
     arch = RedditImageArchiver(name or subreddit, MEDIA_ROOT)
 
     try:
-        crtr = RedditCurator(RedditSecrets(), subreddit, arch)
+        gthr = RedditGatherer(RedditSecrets(), subreddit, arch)
     except SubredditDoesntExistException:
         return "Subreddit {} doesn't exist. Please check again.".format(subreddit)
     else:
-        crtr.gather_data(limit)
+        gthr.gather_data(limit)
         sbr_folder = os.path.join(REDDIT_ROOT, subreddit)
-        crtr.save_to_db(MEDIA_ROOT, sbr_folder)
-        return "Downloaded {} Images".format(len(crtr.submissions))
+        gthr.save_to_db(MEDIA_ROOT, sbr_folder)
+        return "Downloaded {} Images".format(len(gthr.submissions))
