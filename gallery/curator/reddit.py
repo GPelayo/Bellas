@@ -1,5 +1,6 @@
 from urllib import request
 import praw
+from prawcore import exceptions
 import os
 from .common import APISecrets, BaseCurator
 from gallery.logger import BellLogger
@@ -7,6 +8,14 @@ from gallery.logger import BellLogger
 ALLOWED_IMAGE_EXTENTIONS = ["jpg", "png", "gif", "bmp", "jpeg"]
 
 logger = BellLogger("bad-urls", default_level="INFO")
+
+
+class SubredditDoesntExistException(Exception):
+    def __init__(self, subreddit_name):
+        self.message = "Subreddit '{}' doesn't exist.".format(subreddit_name)
+
+    def __str__(self):
+        return self.message
 
 
 class RedditCurator(BaseCurator):
@@ -18,7 +27,11 @@ class RedditCurator(BaseCurator):
         self.subreddit = subreddit
         self.submissions = []
         self.archiver = archiver
-        self.archiver.description = self.client.subreddit(self.subreddit).public_description
+
+        try:
+            self.archiver.description = self.client.subreddit(self.subreddit).public_description
+        except exceptions.Redirect:
+            raise SubredditDoesntExistException(subreddit)
 
     def gather_data(self, limit=5):
         top_posts = self.client.subreddit(self.subreddit).top()
