@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gallery',
     'djcelery',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
