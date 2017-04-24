@@ -9,7 +9,7 @@ import os
 REDDIT_ROOT = os.path.join("gallery", "img", "reddit")
 REDDIT_FULLPATH = os.path.join(MEDIA_ROOT, REDDIT_ROOT)
 if not os.path.exists(REDDIT_FULLPATH):
-    os.mkdir(REDDIT_FULLPATH)
+    os.makedirs(REDDIT_FULLPATH)
 
 
 @app.task
