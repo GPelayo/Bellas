@@ -1,8 +1,8 @@
 from bellorum.celery import app
 from .gatherer.reddit import RedditGatherer, SubredditDoesntExistException
 from .db.archiver import RedditImageArchiver
-from .secrets import RedditSecrets
 from bellorum.settings import MEDIA_ROOT
+from .secrets import RedditSecrets
 import os
 
 
