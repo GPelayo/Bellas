@@ -22,6 +22,5 @@ def gather_pictures(subreddit, name=None, limit=10):
         return "Subreddit {} doesn't exist. Please check again.".format(subreddit)
     else:
         gthr.gather_data(limit)
-        sbr_folder = os.path.join(REDDIT_ROOT, subreddit)
-        gthr.save_to_db(MEDIA_ROOT, sbr_folder)
+        gthr.save_to_db()
         return "Downloaded {} Images".format(len(gthr.submissions))
