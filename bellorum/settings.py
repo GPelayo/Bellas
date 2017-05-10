@@ -25,7 +25,6 @@ BASE_DIR = os.path.dirname(PROJECT_ROOT)
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'r8d#32bz)r$qcb#zswn69buc67**p1=^^g7tjzfbtbg573im@j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -141,7 +140,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-BUCKET_NAME = 'bellorum'
 
 BROKER_URL = "redis://localhost:6379"
 CELERY_ACCEPT_CONTENT = ['json']
@@ -182,10 +180,16 @@ LOGGING = {
     }
 }
 
+
+
 try:
     from .local_settings import *
     USING_LOCAL_SETTINGS = True
 except ImportError:
     USING_LOCAL_SETTINGS = False
+    SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
+    AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
+    AWS_S3_ACCESS_KEY_ID = os.environ['S3_ACCESS_ID']
+    AWS_S3_SECRET_ACCESS_KEY = os.environ['S3_SECRET_ACCESS_KEY']
 
 assert len(SECRET_KEY) > 20, 'Please set SECRET_KEY in local_settings.py'

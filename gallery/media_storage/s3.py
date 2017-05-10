@@ -1,4 +1,3 @@
-from bellorum.settings import BUCKET_NAME, AWS_S3_ACCESS_KEY_ID, AWS_S3_SECRET_ACCESS_KEY
 from gallery.media_storage.common import StorageAdapter
 from django.core.files.storage import default_storage
 
