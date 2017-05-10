@@ -1,7 +1,7 @@
 from urllib import request
 import praw
 from prawcore import exceptions
-import os
+from gallery.media_storage.s3 import S3Apdater
 from .common import APISecrets, BaseGatherer
 from gallery.logger import BellLogger
 
@@ -48,14 +48,13 @@ class RedditGatherer(BaseGatherer):
             else:
                 logger.log("Skipped {}".format(sb))
 
-    def save_to_db(self, media_folder, subdirectory=""):
-        full_dir = os.path.join(media_folder, subdirectory)
-        if not os.path.exists(full_dir):
-            os.makedirs(full_dir)
+    #TODO split to "save to media" and "save to_db"
+    def save_to_db(self):
         for sb in self.submissions:
             filename = sb.url.split('/')[-1]
-            relative_media_path = os.path.join(subdirectory, filename)
-            request.urlretrieve(sb.url, os.path.join(media_folder, relative_media_path))
-            self.archiver.load_image_db_data(sb, relative_media_path)
+            response = request.urlopen(sb.url)
+            adpt = S3Apdater()
+            adpt.stream_to_storage(response, filename)
+            self.archiver.load_image_db_data(sb, adpt.get_url(filename))
             self.archiver.save()
-            logger.log(relative_media_path)
+            logger.log(adpt.get_url(filename))

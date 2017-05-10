@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
     'gallery',
     'djcelery',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -136,9 +138,10 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+BUCKET_NAME = 'bellorum'
 
 BROKER_URL = "redis://localhost:6379"
 CELERY_ACCEPT_CONTENT = ['json']
@@ -178,3 +181,11 @@ LOGGING = {
         }
     }
 }
+
+try:
+    from .local_settings import *
+    USING_LOCAL_SETTINGS = True
+except ImportError:
+    USING_LOCAL_SETTINGS = False
+
+assert len(SECRET_KEY) > 20, 'Please set SECRET_KEY in local_settings.py'

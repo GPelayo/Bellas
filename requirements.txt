@@ -2,10 +2,14 @@ amqp==1.4.9
 anyjson==0.3.3
 appdirs==1.4.3
 billiard==3.3.0.23
+boto==2.46.1
 celery==3.1.25
 dj-database-url==0.4.2
 Django==1.10.6
+django-boto==0.3.11
 django-celery==3.2.1
+django-extensions==1.7.9
+django-storages==1.5.2
 gunicorn==19.7.1
 kombu==3.0.37
 packaging==16.8
@@ -13,6 +17,7 @@ praw==4.4.0
 prawcore==0.8.0
 psycopg2==2.7.1
 pyparsing==2.2.0
+python-dateutil==2.6.0
 pytz==2016.10
 requests==2.13.0
 six==1.10.0

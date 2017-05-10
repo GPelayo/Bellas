@@ -34,7 +34,8 @@ class BaseArchiver:
         self.thumb_filepath = thumb_dir or image_dir
         self.image_filepath = image_dir
         self.image_data = picture_data
-        self.width, self.height = self.__calc_image_size() or (DEFAULT_IMG_WIDTH, DEFAULT_IMG_HEIGHT)
+        # self.width, self.height = self.__calc_image_size() or (DEFAULT_IMG_WIDTH, DEFAULT_IMG_HEIGHT)
+        self.width, self.height = 800, 800
 
     def save(self):
         raise NotImplemented
