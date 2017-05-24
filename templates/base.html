@@ -10,7 +10,7 @@
     </title>
     {% block styles %}
         <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/normalize.css' %}" />
-        <link rel="stylesheet" type="text/css" href="{% static 'gallery/fonts/font-awesome-4.3.0/css/font-awesome.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/fonts/font-awesome-4.3.0/css/font-awesome.min.css' %}" />
         <link rel="stylesheet" type="text/css" href="{% static 'gallery/css/base.css' %}" />
     {% endblock %}
     {% block scripts %}
@@ -24,7 +24,6 @@
             {% endblock %}
         </div>
         {% block tailscripts %}
-            <script src="{% static 'gallery/js/gallery.js' %}"></script>
             <script src="{% static 'gallery/js/imagesloaded.pkgd.min.js' %}"></script>
             <script src="{% static 'gallery/js/masonry.pkgd.min.js' %}"></script>
             <script src="{% static 'gallery/js/classie.js' %}"></script>
