@@ -20,16 +20,13 @@
 		<div class="content">
 			<div class="grid">
                 {% for gallery in gallery_list %}
-                    <div class="grid__item" data-size="700x800">
-                        <a href="{{ gallery.images.0.image_url }}" class="img-wrap"><img src="{{ gallery.images.0.thumb_url }}" alt="img06" />
-                            <div class="description description--grid">
-                                <a class="item--title" href="{% url 'grid' gallery.url %}">
-                                    <h3>
+                    <div class="grid__item with_hover" data-size="700x800">
+                        <a href="{% url 'grid' gallery.url %}" class="img-item">
+                            <div class="grid_item_overlay with_hover">
+                                <img src="{{ gallery.images.0.thumb_url }}" alt="img06" />
+                                <h3>
                                         {{ gallery.name.title }}
-                                    </h3>
-                                </a>
-                                    <p>{{ gallery.description }}</p>
-
+                                </h3>
                             </div>
                         </a>
                     </div>
@@ -49,6 +46,11 @@
 {% block tailscripts %}
     {{ block.super }}
     <script>
+        var is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if(is_mobile) {
+            $('.grid_item_overlay').removeClass('with_hover');
+        }
         (function() {
             var support = { transitions: Modernizr.csstransitions },
                 // transition end event name
@@ -75,41 +77,8 @@
                     x : 1,
                     y : -0.5
                 },
-                pagemargin : 100,
-                onExpand : function() {
-                    classie.add(collageEl, 'collage--open');
-                },
-                onOpenItem : function(instance, item) {
-                    instance.items.forEach(function(el) {
-                        if(item != el) {
-                            var delay = Math.floor(Math.random() * 150);
-                            el.style.WebkitTransition = 'opacity .5s ' + delay + 'ms cubic-bezier(.7,0,.3,1), -webkit-transform .5s ' + delay + 'ms cubic-bezier(.7,0,.3,1)';
-                            el.style.transition = 'opacity .5s ' + delay + 'ms cubic-bezier(.7,0,.3,1), transform .5s ' + delay + 'ms cubic-bezier(.7,0,.3,1)';
-                            el.style.WebkitTransform = 'scale3d(0.1,0.1,1)';
-                            el.style.transform = 'scale3d(0.1,0.1,1)';
-                            el.style.opacity = 0;
-                        }
-                    });
-                    var gallery_lnk = item.querySelector('a.item--title').getAttribute('href');
-                    var btn = document.querySelector('.button--view');
-                    btn.setAttribute('href', gallery_lnk);
-                },
-                onCloseItem : function(instance, item) {
-                    classie.remove(collageEl, 'collage--open');
-                    instance.items.forEach(function(el) {
-                        if(item != el) {
-                            el.style.WebkitTransition = 'opacity .4s, -webkit-transform .4s';
-                            el.style.transition = 'opacity .4s, transform .4s';
-                            el.style.WebkitTransform = 'scale3d(1,1,1)';
-                            el.style.transform = 'scale3d(1,1,1)';
-                            el.style.opacity = 1;
-                            onEndTransition(el, function() {
-                                el.style.transition = 'none';
-                                el.style.WebkitTransform = 'none';
-                            });
-                        }
-                    });
-                }
+				enable_transitions: false,
+                pagemargin : 100
             });
         })();
     </script>

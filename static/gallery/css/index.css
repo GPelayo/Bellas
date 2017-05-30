@@ -26,9 +26,36 @@ body {
 }
 
 .grid__item {
-	width: 190px;
-	padding: 20px;
 	background-size: 100%;
+	margin: 10px;
+}
+
+.grid_item_overlay {
+	background: rgba(100, 0, 0, 0.5);
+    position: static;
+	background-size: 100%;
+}
+
+.grid_item_overlay.with_hover:hover {
+	background: none;
+}
+
+.grid_item_overlay h3 {
+    visibility: hidden;
+    color: white;
+    left: 0.5em;
+    bottom: 0.25em;
+    font-size: 2em;
+    position: absolute;
+    margin: 0;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+	position: relative;
+	z-index: -1;
+	width: 250px;
 }
 
 .grid__item--current {
@@ -42,11 +69,6 @@ body {
 .img-wrap:focus,
 .img-wrap:hover {
 	outline: none;
-}
-
-.img-wrap img {
-	display: block;
-	max-width: 100%;
 }
 
 .preview {

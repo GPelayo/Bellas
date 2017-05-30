@@ -72,14 +72,12 @@
 		this.gridEl = el;
 		this.options = extend( {}, this.options );
 		extend( this.options, options );
-		
 		this.items = [].slice.call(this.gridEl.querySelectorAll('.grid__item'));
 		this.previewEl = nextSibling(this.gridEl);
 		this.isExpanded = false;
 		this.isAnimating = false;
 		this.closeCtrl = this.previewEl.querySelector('button.action--close');
 		this.previewDescriptionEl = this.previewEl.querySelector('.description--preview');
-
 		this._init();
 	}
 
@@ -90,6 +88,7 @@
 		pagemargin : 0,
 		// x and y can have values from 0 to 1 (percentage). If negative then it means the alignment is left and/or top rather than right and/or bottom
 		// so, as an example, if we want our large image to be positioned vertically on 25% of the screen and centered horizontally the values would be x:1,y:-0.25
+		enable_transitions: true,
 		imgPosition : { x : 1, y : 1 },
 		onInit : function(instance) { return false; },
 		onResize : function(instance) { return false; },
@@ -101,8 +100,8 @@
 	GridFx.prototype._init = function() {
 		// callback
 		this.options.onInit(this);
-
 		var self = this;
+		this.en_trn = this.options.enable_transitions;
 		// init masonry after all images are loaded
 		imagesLoaded( this.gridEl, function() {
 			// initialize masonry
@@ -110,10 +109,16 @@
 				itemSelector: '.grid__item',
 				isFitWidth : true
 			});
+
+			document.querySelectorAll('.grid__item h3').forEach(function(item) {
+                item.style.visibility = 'visible';
+			});
 			// show grid after all images (thumbs) are loaded
 			classie.add(self.gridEl, 'grid--loaded');
 			// init/bind events
-			self._initEvents();
+            if(self.en_trn) {
+                self._initEvents();
+            }
 			// create the large image and append it to the DOM
 			self._setOriginal();
 			// create the clone image and append it to the DOM
@@ -127,7 +132,6 @@
 	GridFx.prototype._initEvents = function () {
 		var self = this,
 			clickEvent = (document.ontouchstart!==null ? 'click' : 'touchstart');
-
 		this.items.forEach(function(item) {
 			var touchend = function(ev) {
 					ev.preventDefault();

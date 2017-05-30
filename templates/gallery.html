@@ -47,6 +47,7 @@
     {{ block.super }}
     <script>
 		(function() {
+            var is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 			// create SVG circle overlay and append it to the preview element
 			function createCircleOverlay(previewEl) {
 				var dummy = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -71,6 +72,7 @@
 				onResize : function(instance) {
 					instance.previewEl.querySelector('svg circle').setAttributeNS(null, 'r', Math.sqrt(Math.pow(instance.previewEl.offsetWidth,2) + Math.pow(instance.previewEl.offsetHeight,2)));
 				},
+				enable_transitions: !is_mobile,
 				onOpenItem : function(instance, item) {
 					// item's image
 					var gridImg = item.querySelector('img'),
