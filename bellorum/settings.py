@@ -67,7 +67,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
-    'EXCEPTION_HANDLER': 'gallery.restful.web_exceptions.bellorum_exception_handler'
+    'EXCEPTION_HANDLER': 'gallery.dj_rest_framework.web_exceptions.bellorum_exception_handler'
 }
 
 ROOT_URLCONF = 'bellorum.urls'

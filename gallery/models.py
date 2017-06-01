@@ -7,7 +7,6 @@ class BellObject(models.Model):
 
 class BellGallery(BellObject):
     name = models.CharField(max_length=35)
-    slug = models.SlugField(max_length=10)
     description = models.CharField(max_length=300, null=True, blank=True)
 
     def __str__(self):
@@ -15,7 +14,7 @@ class BellGallery(BellObject):
 
 
 class BellImage(BellObject):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=300)
     width = models.IntegerField()
     height = models.IntegerField()
     image_location = models.CharField(max_length=300)
