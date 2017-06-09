@@ -12,7 +12,7 @@ It helped me practice with Celery, Django, Heroku, and S3.
 
 ### Gallery Index
 
-The json list of galleries can be accessed at https://bellorum-api.herokuapp.com/v0/gallery/index. 
+The json list of galleries can be accessed at https://bellapi-heroku.herokuapp.com/v0/gallery/index. 
 The galleries have the following fields.
 
 Field             | Description
@@ -25,9 +25,9 @@ preview_image_url | A link to a single thumb image from a gallery for previewing
 ### Gallery
 
 If you want to get more information on a specific gallery,
-just append the galleries *slug* at https://bellorum-api.herokuapp.com/v0/gallery/id
+just append the galleries *slug* at https://bellapi-heroku.herokuapp.com/v0/gallery/id
 
-**Example**: https://bellorum-api.herokuapp.com/v0/gallery/id/123
+**Example**: https://bellapi-heroku.herokuapp.com/v0/gallery/id/123
 
 The json has the following fields.
 
