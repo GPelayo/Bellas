@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.staticfiles',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -70,6 +71,22 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'gallery.dj_rest_framework.web_exceptions.bellorum_exception_handler'
 }
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 ROOT_URLCONF = 'bellorum.urls'
 
 WSGI_APPLICATION = 'bellorum.wsgi.application'
@@ -78,19 +95,7 @@ WSGI_APPLICATION = 'bellorum.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bellorum',
-        'USER': 'bell',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
 
-db_from_env = dj_database_url.config()
-DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -131,6 +136,9 @@ USE_TZ = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 BROKER_URL = "redis://localhost:6379"
 CELERY_ACCEPT_CONTENT = ['json']
@@ -193,5 +201,18 @@ except ImportError:
     AWS_STORAGE_BUCKET_NAME = os.environ['S3_BUCKET_NAME']
     AWS_S3_ACCESS_KEY_ID = os.environ['S3_ACCESS_ID']
     AWS_S3_SECRET_ACCESS_KEY = os.environ['S3_SECRET_ACCESS_KEY']
+    DATABASES = {
+        'default': {
+            'ENGINE': os.environ['DATABASE_ENGINE'],
+            'NAME': os.environ['DATABASE_NAME'],
+            'USER': os.environ['DATABASE_USER'],
+            'PASSWORD': os.environ['DATABASE_PASSWORD'],
+            'HOST': os.environ['DATABASE_HOST'],
+            'PORT': os.environ['DATABASE_PORT'],
+        }
+    }
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
 
 assert len(SECRET_KEY) > 20, 'Please set SECRET_KEY in local_settings.py'
