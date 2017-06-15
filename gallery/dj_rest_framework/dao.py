@@ -1,5 +1,5 @@
 from gallery.db.dao import BaseDAO
-from gallery.db.serial.model_builders import SerialIndexGalleryBuilder, SerialPageGalleryBuilder
+from gallery.db.parcel.builders import IndexGalleryParcelBuilder, PageGalleryParcelBuilder
 from gallery.models import BellImage, BellGallery
 from django.core.exceptions import ObjectDoesNotExist
 from gallery.exceptions import NonexistentGalleryError
@@ -10,7 +10,7 @@ class RestfulIndexDAO(BaseDAO):
         output_galleries = []
         for mdl in BellGallery.objects.all():
             prv_img = BellImage.objects.filter(parent_gallery=mdl.pk)[0]
-            sr_mdl = SerialIndexGalleryBuilder(mdl, prv_img).create()
+            sr_mdl = IndexGalleryParcelBuilder(mdl, prv_img).create()
             output_galleries.append(sr_mdl)
         return output_galleries
 
@@ -27,4 +27,4 @@ class RestfulPageDAO(BaseDAO):
             raise NonexistentGalleryError(self.gallery_id)
         else:
             image_list = BellImage.objects.filter(parent_gallery=self.gallery_id)
-            return SerialPageGalleryBuilder(gallery, image_list).create()
+            return PageGalleryParcelBuilder(gallery, image_list).create()

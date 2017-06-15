@@ -1,11 +1,9 @@
-from urllib import request
 import praw
 from prawcore import exceptions
-import os
-from .common import APISecrets, BaseGatherer
+from .common import BaseGalleryController
 from gallery.logger import BellLogger
-
-ALLOWED_IMAGE_EXTENTIONS = ["jpg", "png", "gif", "bmp", "jpeg"]
+from gallery.secrets import RedditSecrets
+from gallery.db.parcel.models import GalleryParcel, WebImageParcel
 
 logger = BellLogger("bad-urls", default_level="INFO")
 
@@ -18,44 +16,53 @@ class SubredditDoesntExistException(Exception):
         return self.message
 
 
-class RedditGatherer(BaseGatherer):
-    def __init__(self, secrets: APISecrets, subreddit, archiver):
-        super().__init__(archiver)
+class RedditOrderType:
+    TOP = 1
+
+
+class RedditGatherer(BaseGalleryController):
+    DEFAULT_GATHER_LIMIT = 10
+
+    def __init__(self, subreddit_name, gallery_name=None, sort_order=RedditOrderType.TOP, image_filter=lambda x: True):
+        secrets = RedditSecrets()
         self.client = praw.Reddit(client_id=secrets.client_id,
                                   client_secret=secrets.client_secret,
                                   user_agent=secrets.user_agent)
-        self.subreddit = subreddit
-        self.submissions = []
-        self.archiver = archiver
-
+        self.subreddit_name = subreddit_name
+        self.sort_order = sort_order
+        self.gallery_name = gallery_name or subreddit_name
+        self.image_filter = image_filter
         try:
-            self.archiver.description = self.client.subreddit(self.subreddit).public_description
+            self.client.subreddit(self.subreddit_name)
         except exceptions.Redirect:
-            raise SubredditDoesntExistException(subreddit)
+            raise SubredditDoesntExistException(subreddit_name)
 
-    def gather_data(self, limit=5):
-        top_posts = self.client.subreddit(self.subreddit).top()
+    def build_gallery(self, limit=DEFAULT_GATHER_LIMIT):
+        subreddit = self.client.subreddit(self.subreddit_name)
+
+        glry = GalleryParcel()
+        glry.name = self.gallery_name or self.subreddit_name
+        glry.description = subreddit.public_description
+
+        # if self.sort_order == RedditOrderType.TOP:
+        submission_stream = self.client.subreddit(self.subreddit_name).top()
         has_more_posts = True
-        while len(self.submissions) < limit and has_more_posts:
+
+        while glry.image_count < limit and has_more_posts:
             try:
-                sb = next(top_posts)
+                sb = next(submission_stream)
             except StopIteration:
                 has_more_posts = False
 
-            if sb.url.split(".")[-1] in ALLOWED_IMAGE_EXTENTIONS \
-                    and not self.archiver.is_dupe_image(source_id=sb.id):
-                self.submissions.append(sb)
+            img = WebImageParcel()
+
+            img.name = sb.title
+            img.source_id = sb.id
+            img.source_url = sb.url
+
+            if self.image_filter(img):
+                glry.add_image(img)
             else:
                 logger.log("Skipped {}".format(sb))
 
-    def save_to_db(self, media_folder, subdirectory=""):
-        full_dir = os.path.join(media_folder, subdirectory)
-        if not os.path.exists(full_dir):
-            os.makedirs(full_dir)
-        for sb in self.submissions:
-            filename = sb.url.split('/')[-1]
-            relative_media_path = os.path.join(subdirectory, filename)
-            request.urlretrieve(sb.url, os.path.join(media_folder, relative_media_path))
-            self.archiver.load_image_db_data(sb, relative_media_path)
-            self.archiver.save()
-            logger.log(relative_media_path)
+        return glry

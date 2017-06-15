@@ -1,7 +1,5 @@
-class BaseGatherer:
-    def __init__(self, archiver):
-        self.archiver = archiver
-
+class BaseGalleryController:
+    pass
 
 class APISecrets:
     client_id = None
