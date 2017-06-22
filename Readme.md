@@ -44,10 +44,3 @@ name      | The name of image (Duh).
 image_url | The url to the full size image
 thumb_url | The url to the thumbnail of the image. **Warning**: Currently links to the full-size image due to a bug.
 
-### Gathering Pictures
-
-*Coming Soon*
-
-## Tests
-
-*Coming Soon*
