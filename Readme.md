@@ -1,12 +1,6 @@
 ## Synopsis
 
-This is a photo gallery that periodically gathers pictures from various sources. 
-Currently, it only gathers pictures from Reddit, but I might add other aggregation sites.
-
-## Motivation
-
-I made this project as a basis of other projects. The code structure is shared from my other closed sourced projects. 
-It helped me practice with Celery, Django, Heroku, and S3.
+This is the API for creating a photo gallery. This app also periodically gathers images from various aggregation sites. For demo of this app with a working UI, go to https://bell-sample.herokuapp.com/gallery/index/.
 
 ## How to Use
 
