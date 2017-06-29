@@ -7,7 +7,6 @@ class BellObject(models.Model):
 
 class BellGallery(BellObject):
     name = models.CharField(max_length=35)
-    url = models.CharField(max_length=10)
     description = models.CharField(max_length=300, null=True, blank=True)
 
     def __str__(self):
