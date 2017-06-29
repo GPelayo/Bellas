@@ -5,6 +5,7 @@ from urllib.request import urlopen
 from gallery.util import image as image_utils
 from io import BytesIO
 
+
 class BaseCurator:
     media_archiver = None
     db_archiver = None

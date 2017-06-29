@@ -19,7 +19,13 @@ class S3TestCase(TestCase):
 
 class GatherTestCase(TestCase):
     def test_gather_pictures_task(self):
-        gather_pictures('roomporn', name='room')
+        gather_pictures('pics')
+
+    def test_gallery_name_case(self):
+        gather_pictures('CozyPlaces', name='Cozy Places')
+
+    def test_url_error(self):
+        gather_pictures('bellorum_dev_bug_urls')
 
 
 class ImageUtilTests(TestCase):
