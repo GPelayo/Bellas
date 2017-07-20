@@ -1,4 +1,4 @@
-"""bellorum URL Configuration
+"""Bellas URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from gallery import urls as gallery_urls
-from bellorum import settings
+from bellas import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

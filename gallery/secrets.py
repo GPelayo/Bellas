@@ -1,5 +1,5 @@
 from .gatherer.common import APISecrets
-from bellorum import settings
+from bellas import settings
 import os
 
 

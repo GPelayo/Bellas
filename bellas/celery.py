@@ -3,9 +3,9 @@ import os
 from celery import Celery
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bellorum.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'bellas.settings')
 #
-app = Celery('bellorum')
+app = Celery('bellas')
 
 # # Using a string here means the worker don't have to serialize
 # # the configuration object to child processes.
