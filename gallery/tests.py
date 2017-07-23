@@ -5,8 +5,7 @@ from gallery.tasks import gather_pictures
 from gallery.util import image
 from io import BytesIO
 
-test_image_filename = 'test-folder/tests.jpg'
-test_s3_image = parse.urljoin('https://bellorum.s3.amazonaws.com:443/', test_image_filename)
+TEST_IMAGE_URL = 'https://s3-us-west-1.amazonaws.com/bellorum/test-folder/tests.jpg'
 
 
 class S3TestCase(TestCase):
@@ -15,25 +14,21 @@ class S3TestCase(TestCase):
 
     def test_save_image(self):
         adptr = s3.S3Apdater()
-        test_img_buffer = BytesIO(request.urlopen(test_s3_image).read())
-        adptr.save_chucks(test_img_buffer, test_image_filename, "S3TestCase-test_save_image")
+        test_img_buffer = BytesIO(request.urlopen(TEST_IMAGE_URL).read())
+        adptr.save_chucks(test_img_buffer, 'test-folder/tests.jpg')
         assert True
 
 
 class GatherTestCase(TestCase):
     def test_gather_pictures_task(self):
-        gather_pictures('pics')
-
-    def test_gallery_name_case(self):
-        gather_pictures('CozyPlaces', name='Cozy Places')
-
-    def test_url_error(self):
-        gather_pictures('bellorum_dev_bug_urls')
+        gather_pictures('roomporn', name='room')
 
 
 class ImageUtilTests(TestCase):
     def test_calc_image_size(self):
-        test_image_buffer = BytesIO(request.urlopen(test_s3_image).read())
+        test_image_filename = 'test-folder/tests.jpg'
+        test_image_buffer = BytesIO(request.urlopen(parse.urljoin('https://bellorum.s3.amazonaws.com:443/',
+                                                   test_image_filename)).read())
         test_width, test_height = 2048, 1365
         img_width, img_height = image.calc_image_size(test_image_buffer, test_image_filename)
 

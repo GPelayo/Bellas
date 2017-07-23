@@ -27,5 +27,5 @@ class WebGalleryDao(BaseDAO):
         img_obj.height = image.height
         img_obj.image_location = image.image_url
         img_obj.thumbnail_location = image.thumb_url
-        img_obj.parent_gallery = BellGallery.objects.get(name=gallery.name.lower())
+        img_obj.parent_gallery = BellGallery.objects.get(name=gallery.name)
         img_obj.save()

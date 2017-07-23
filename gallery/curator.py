@@ -5,7 +5,6 @@ from urllib.request import urlopen
 from gallery.util import image as image_utils
 from io import BytesIO
 
-
 class BaseCurator:
     media_archiver = None
     db_archiver = None
@@ -32,9 +31,9 @@ class BellorumCurator(BaseCurator):
         for img in glry.images:
             filename = img.source_url.split('/')[-1]
             img_buffer = BytesIO(urlopen(img.source_url).read())
-            self.media_archiver.stream_to_storage(img_buffer, filename, self.image_gatherer.gallery_name)
+            self.media_archiver.stream_to_storage(img_buffer, filename)
             img.width, img.height = image_utils.calc_image_size(img_buffer, filename=filename)
-            img.image_url = img.thumb_url = self.media_archiver.get_url(filename, self.image_gatherer.gallery_name)
+            img.image_url = img.thumb_url = self.media_archiver.get_url(filename)
             self.dao.save_image(img, glry)
 
         return glry.image_count

@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import AllowAny
+from django.http import response
+from bellorum.settings import README_LINK
 
 
 class IndexView(APIView):
@@ -29,3 +31,11 @@ class PageView(APIView):
             raise WrongGalleryException(gallery_id)
         else:
             return Response(bldr.build())
+
+
+def landing_page(request):
+    html = "<h2>Welcome to Bellapi!</h2>" \
+           "<p>If you want to learn how to use this API, please checkout the " \
+           "<a href='{}'>Readme</a>.</p>".format(README_LINK)
+
+    return response.HttpResponse(html)

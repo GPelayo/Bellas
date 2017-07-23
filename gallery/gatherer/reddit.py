@@ -1,13 +1,11 @@
 import praw
-from urllib.request import urlopen
-from urllib.error import URLError
 from prawcore import exceptions
 from .common import BaseGalleryController
 from gallery.logger import BellLogger
 from gallery.secrets import RedditSecrets
 from gallery.db.parcel.models import GalleryParcel, WebImageParcel
 
-logger = BellLogger("bad-urls", file_name="bad-urls.log", default_level="INFO")
+logger = BellLogger("bad-urls", default_level="INFO")
 
 
 class SubredditDoesntExistException(Exception):
@@ -62,17 +60,9 @@ class RedditGatherer(BaseGalleryController):
             img.source_id = sb.id
             img.source_url = sb.url
 
-            if not self.image_filter(img):
-                logger.log("{} skipped by image_filter ".format(sb.title))
-            elif self.validate_url(img.source_url):
+            if self.image_filter(img):
                 glry.add_image(img)
+            else:
+                logger.log("Skipped {}".format(sb))
 
         return glry
-
-    def validate_url(self, url):
-        try:
-            urlopen(url)
-        except URLError as m:
-            logger.log("[{}] {}: {}".format(self.subreddit_name, url, str(m)))
-        else:
-            return True
