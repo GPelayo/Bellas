@@ -1,10 +1,10 @@
-from bellorum.celery import app
-from gallery.curator import BellorumCurator, SubredditDoesntExistException
+from bellas.celery import app
+from gallery.curator import BellCurator, SubredditDoesntExistException
 
 @app.task
 def gather_pictures(subreddit, name=None, limit=10):
     try:
-        gthr = BellorumCurator(subreddit, name)
+        gthr = BellCurator(subreddit, name)
     except SubredditDoesntExistException:
         return "Subreddit {} doesn't exist. Please check again.".format(subreddit)
     else:

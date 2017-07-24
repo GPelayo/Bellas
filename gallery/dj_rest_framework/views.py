@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import AllowAny
 from django.http import response
-from bellorum.settings import README_LINK
+from bellas.settings import README_LINK
 
 
 class IndexView(APIView):

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from bellorum import settings
+from bellas import settings
 from gallery.media_storage import s3
 from urllib import request, parse
 from gallery.tasks import gather_pictures

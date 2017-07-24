@@ -1,1 +1,1 @@
-web: gunicorn bellorum.wsgi --log-file -
+web: gunicorn bellas.wsgi --log-file -

@@ -2,7 +2,7 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic.base import RedirectView
-from bellorum import settings
+from bellas import settings
 from gallery.dj_rest_framework.api import v0
 from gallery.dj_rest_framework import views
 

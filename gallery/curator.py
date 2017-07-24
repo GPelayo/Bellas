@@ -14,7 +14,7 @@ class BaseCurator:
 ALLOWED_IMAGE_EXTENTIONS = ["jpg", "png", "gif", "bmp", "jpeg"]
 
 
-class BellorumCurator(BaseCurator):
+class BellCurator(BaseCurator):
     def __init__(self, subreddit_name, gallery_name=None):
         self.media_archiver = S3Apdater()
         self.dao = WebGalleryDao()

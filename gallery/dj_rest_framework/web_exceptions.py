@@ -11,7 +11,7 @@ class WrongGalleryException(APIException):
         self.detail = "Gallery doesn't exist. Please check the id/name.".format(gallery_id)
 
 
-def bellorum_exception_handler(exc, context):
+def bell_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if response:
