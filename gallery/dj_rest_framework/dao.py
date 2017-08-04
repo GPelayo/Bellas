@@ -9,7 +9,8 @@ class RestfulIndexDAO(BaseDAO):
     def get_all_galleries(self):
         output_galleries = []
         for mdl in BellGallery.objects.all():
-            prv_img = BellImage.objects.filter(parent_gallery=mdl.pk)[0]
+            glry = BellImage.objects.filter(parent_gallery=mdl.pk)
+            prv_img = glry[0] if glry else None
             sr_mdl = IndexGalleryParcelBuilder(mdl, prv_img).create()
             output_galleries.append(sr_mdl)
         return output_galleries

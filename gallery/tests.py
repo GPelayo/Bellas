@@ -43,8 +43,9 @@ class TestDBEntries:
         ti2.parent_gallery = tg
         ti2.save()
         tg2 = BellGallery()
+
         tg2.name = 'Single Image Gallery'
-        tg2.description = 'Single Image Gallery 2'
+        tg2.description = 'Single Image Gallery'
         tg2.save()
         ti3 = BellImage()
         ti3.name = 'Test Image 3'
@@ -56,44 +57,25 @@ class TestDBEntries:
         ti3.parent_gallery = tg2
         ti3.save()
 
-        self.galleries = [tg, tg2]
-        self.single_image_gallery = tg2
-        self.multi_image_gallery = tg
-        self.multi_image_gallery_images = [ti, ti2]
-        self.single_image_gallery_images = [ti3]
+        tg3 = BellGallery()
+        tg3.name = 'Blank Image Gallery'
+        tg3.description = 'Blank Image Gallery'
+        tg3.save()
 
-    def check_index(self, test_case: TestCase, response):
-        exp_gallery_list = json.loads(response.content.decode('utf-8'))
-        valid_gallery_list = {
-            self.galleries[0].name: {
-                'name': self.galleries[0].name,
-                'slug': str(self.galleries[0].pk),
-                'description': self.galleries[0].description,
-                'preview_image_url': self.multi_image_gallery_images[-1].thumbnail_location
-            },
-            self.galleries[1].name: {
-                'name': self.galleries[1].name,
-                'slug': str(self.galleries[1].pk),
-                'description': self.galleries[1].description,
-                'preview_image_url': self.single_image_gallery_images[-1].thumbnail_location
-            }
-        }
+        self.multi_image_gallery_data = self.generate_gallery_serial(tg, [ti, ti2])
+        self.single_image_gallery_data = self.generate_gallery_serial(tg2, [ti3])
+        self.no_image_gallery_data = self.generate_gallery_serial(tg3, [])
+        self.galleries = [self.multi_image_gallery_data,
+                          self.single_image_gallery_data,
+                          self.no_image_gallery_data]
 
-        test_case.assertEqual(len(exp_gallery_list['gallery']), len(valid_gallery_list), msg='Wrong Gallery Count')
-
-        for g in exp_gallery_list['gallery']:
-            valid_data = valid_gallery_list[g['name']]
-            test_case.assertEqual(valid_data['name'], g['name'], msg='Wrong Gallery Name')
-            test_case.assertEqual(valid_data['slug'], g['slug'], msg='Wrong Gallery Slug')
-            test_case.assertEqual(valid_data['description'], g['description'], msg='Wrong Gallery Description')
-            test_case.assertEqual(valid_data['preview_image_url'], g['preview_image_url'], msg='Wrong Preview Url')
-
-    def check_image_gallery(self, test_case: TestCase, response):
-        exp_gallery = json.loads(response.content.decode('utf-8'))
-
-        valid_gallery = {
-            'name': self.single_image_gallery.name,
-            'description': self.single_image_gallery.description,
+    @staticmethod
+    def generate_gallery_serial(gallery, images):
+        return {
+            'id': gallery.pk,
+            'name': gallery.name,
+            'description': gallery.description,
+            'preview_image_url': images[-1].thumbnail_location if len(images) > 0 else None,
             'images': {
                 img.pk: {
                     'name': img.name,
@@ -101,37 +83,76 @@ class TestDBEntries:
                     'thumb_url': img.thumbnail_location,
                     'width': img.width,
                     'height': img.height
-                } for img in self.single_image_gallery_images
+                } for img in images
             }
         }
-        test_case.assertEqual(exp_gallery['name'], valid_gallery['name'], msg='Wrong Gallery Name')
-        test_case.assertEqual(exp_gallery['description'], valid_gallery['description'], msg='Wrong Gallery Description')
-        test_case.assertEqual(len(exp_gallery['images']), len(valid_gallery['images']), msg='Wrong Image Count')
-        # test_case.assertEqual(len(exp_gallery['gallery']), len(valid_gallery), msg='Wrong Gallery Count')
-        #
-        # for g in exp_gallery['images']:
-        #     valid_data = valid_gallery[g['name']]
-        #     test_case.assertEqual(valid_data['name'], g['name'], msg='Wrong Gallery Name')
-        #     test_case.assertEqual(valid_data['slug'], g['slug'], msg='Wrong Gallery Slug')
-        #     test_case.assertEqual(valid_data['description'], g['description'], msg='Wrong Gallery Description')
-        #     test_case.assertEqual(valid_data['preview_image_url'], g['preview_image_url'], msg='Wrong Preview Url')
+
+    def check_index(self, test_case: TestCase, response):
+        exp_glry_data = json.loads(response.content.decode('utf-8'))
+        exp_glry_list = exp_glry_data['gallery']
+
+        valid_gallery_list = {
+            g['name']: {
+                'name': g['name'],
+                'slug': str(g['id']),
+                'description': g['description'],
+                'preview_image_url': g['preview_image_url']
+            } for g in self.galleries
+         }
+        test_case.assertEqual(len(exp_glry_list), len(valid_gallery_list), msg='Wrong Gallery Count')
+
+        for g in exp_glry_list:
+            valid_data = valid_gallery_list[g['name']]
+            test_case.assertEqual(valid_data['name'], g['name'], msg='Wrong Gallery Name')
+            test_case.assertEqual(valid_data['slug'], g['slug'], msg='Wrong Gallery Slug')
+            test_case.assertEqual(valid_data['description'], g['description'], msg='Wrong Gallery Description')
+            test_case.assertEqual(valid_data['preview_image_url'], g['preview_image_url'], msg='Wrong Preview Url')
+
+    def check_empty_gallery(self, test_case: TestCase, response):
+        self._check_image_gallery(test_case, response, self.no_image_gallery_data)
+
+    def check_single_image_gallery(self, test_case: TestCase, response):
+        self._check_image_gallery(test_case, response, self.single_image_gallery_data)
+
+    def check_multi_image_gallery(self, test_case: TestCase, response):
+        self._check_image_gallery(test_case, response, self.multi_image_gallery_data)
+
+    @staticmethod
+    def _check_image_gallery(test_case: TestCase, response, valid_gallery_data):
+        exp_gallery = json.loads(response.content.decode('utf-8'))
+        test_case.assertEqual(exp_gallery['name'], valid_gallery_data['name'], msg='Wrong Gallery Name')
+        test_case.assertEqual(exp_gallery['description'], valid_gallery_data['description'], msg='Wrong Gallery Description')
+        test_case.assertEqual(len(exp_gallery['images']), len(valid_gallery_data['images']), msg='Wrong Image Count')
 
 
 class APITestCase(TestCase):
     def setUp(self):
         self.db_tester = TestDBEntries()
         self.index_url = dj_urls.reverse(INDEX_VIEW_NAME)
-        self.single_img_gallery_url = dj_urls.reverse(GALLERY_VIEW_NAME,
-                                                      args=[str(self.db_tester.single_image_gallery.pk)])
+
         self.client = Client()
 
     def test_index(self):
         resp = self.client.get(self.index_url)
         self.db_tester.check_index(self, resp)
 
+    def test_gallery(self):
+        self.normal_gallery_url = dj_urls.reverse(GALLERY_VIEW_NAME,
+                                                  args=[str(self.db_tester.multi_image_gallery_data['id'])])
+        resp = self.client.get(self.normal_gallery_url)
+        self.db_tester.check_multi_image_gallery(self, resp)
+
     def test_single_image_gallery(self):
+        self.single_img_gallery_url = dj_urls.reverse(GALLERY_VIEW_NAME,
+                                                      args=[str(self.db_tester.single_image_gallery_data['id'])])
         resp = self.client.get(self.single_img_gallery_url)
-        self.db_tester.check_image_gallery(self, resp)
+        self.db_tester.check_single_image_gallery(self, resp)
+
+    def test_empty_gallery(self):
+        self.no_img_gallery_url = dj_urls.reverse(GALLERY_VIEW_NAME,
+                                                  args=[str(self.db_tester.no_image_gallery_data['id'])])
+        resp = self.client.get(self.no_img_gallery_url)
+        self.db_tester.check_empty_gallery(self, resp)
 
 
 class S3TestCase(TestCase):

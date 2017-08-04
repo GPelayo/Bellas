@@ -9,7 +9,7 @@ class ParcelBuilder:
 
 
 class IndexGalleryParcelBuilder(ParcelBuilder):
-    def __init__(self, db_gallery: BellGallery, preview_image: BellImage):
+    def __init__(self, db_gallery: BellGallery, preview_image: BellImage=None):
         self.db_gallery = db_gallery
         self.preview_image = preview_image
 
@@ -18,7 +18,7 @@ class IndexGalleryParcelBuilder(ParcelBuilder):
         serial_mdl.name = self.db_gallery.name
         serial_mdl.slug = self.db_gallery.pk
         serial_mdl.description = self.db_gallery.description
-        serial_mdl.preview_image_url = self.preview_image.thumbnail_location
+        serial_mdl.preview_image_url = self.preview_image.thumbnail_location if self.preview_image else None
 
         return serial_mdl
 
